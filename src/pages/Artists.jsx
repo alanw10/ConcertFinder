@@ -142,7 +142,18 @@ export default function ArtistsPage({ isSignedIn, setIsSignedIn, onLogout, userP
                       <h3 className="text-xl font-semibold mb-2 text-white">
                         {artist.name}
                       </h3>
-                      
+                      {artist.external_urls?.spotify && (
+                        <a
+                          // href = {} this is supposed to be the link to their ticketmaster page
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block"
+                        >
+                          <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0">
+                            Find Concerts
+                          </Button>
+                        </a>
+                      )}
                     </div>
                   </div>
                 ))}
