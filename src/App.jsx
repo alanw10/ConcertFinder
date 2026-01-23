@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Artists from "./pages/Artists";
-import Concerts from "./pages/Concerts";
 import Callback from "./pages/Callback";
 import { isAuthenticated, logout as spotifyLogout, getUserProfile, getStoredUserProfile } from "./lib/spotifyAuth";
 
@@ -50,8 +49,8 @@ export default function App() {
 
   if (isCheckingAuth) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-violet-950 via-fuchsia-950 to-indigo-950">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black"></div>
       </div>
     );
   }
@@ -66,12 +65,6 @@ export default function App() {
         path="/artists"
         element={
           <Artists isSignedIn={isSignedIn} setIsSignedIn={setIsSignedIn} onLogout={handleLogout} userProfile={userProfile} />
-        }
-      />
-      <Route
-        path="/concerts"
-        element={
-          <Concerts isSignedIn={isSignedIn} setIsSignedIn={setIsSignedIn} onLogout={handleLogout} userProfile={userProfile} />
         }
       />
       <Route

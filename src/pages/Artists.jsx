@@ -11,7 +11,7 @@ export default function ArtistsPage({ isSignedIn, setIsSignedIn, onLogout, userP
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [timeRange, setTimeRange] = useState('medium_term'); 
-
+  
   useEffect(() => {
     if (isSignedIn) {
       fetchTopArtists();
@@ -22,7 +22,7 @@ export default function ArtistsPage({ isSignedIn, setIsSignedIn, onLogout, userP
     setLoading(true);
     setError(null);
     try {
-      const artists = await getUserTopArtists(timeRange, 20);
+      const artists = await getUserTopArtists(timeRange,50);
       setTopArtists(artists);
       console.log(topArtists);
     } catch (err) {
@@ -56,17 +56,17 @@ export default function ArtistsPage({ isSignedIn, setIsSignedIn, onLogout, userP
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-950 via-fuchsia-950 to-indigo-950">
+    <div className="min-h-screen bg-white">
       <Header active="artists" isSignedIn={isSignedIn} onLogout={onLogout} userProfile={userProfile} />
 
       {!isSignedIn ? (
         <div className="flex flex-col items-center justify-center h-[calc(100vh-89px)] text-center px-6">
-          <h2 className="text-4xl font-bold text-white mb-4">
+          <h2 className="text-4xl font-bold text-black mb-4">
             Sign in with Spotify to see artists
           </h2>
           <Button
             size="lg"
-            className="bg-white text-violet-950 hover:bg-white/90 border-0 px-8 text-lg"
+            className="bg-black text-white hover:bg-gray-800 border-0 px-8 text-lg"
             onClick={handleSpotifyLogin}
           >
             Sign In with Spotify
@@ -76,11 +76,11 @@ export default function ArtistsPage({ isSignedIn, setIsSignedIn, onLogout, userP
         <main className="container mx-auto px-6 py-16">
           <div className="max-w-6xl mx-auto">
             <div className="mb-10">
-              <h1 className="text-5xl font-bold mb-3 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                Your Top Artists
+              <h1 className="text-5xl font-bold mb-3 text-black">
+                Concerts From Your Favorites 
               </h1>
-              <p className="text-white/70 text-lg mb-4">
-                Your favorite musicians based on your listening history
+              <p className="text-gray-700 text-lg mb-4">
+                Your favorite artists based on your listening history
               </p>
               
               <div className="flex gap-2 mb-6">
@@ -90,8 +90,8 @@ export default function ArtistsPage({ isSignedIn, setIsSignedIn, onLogout, userP
                     onClick={() => setTimeRange(range)}
                     className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                       timeRange === range
-                        ? 'bg-white text-violet-950'
-                        : 'bg-white/10 text-white/70 hover:bg-white/20'
+                        ? 'bg-black text-white'
+                        : 'bg-gray-200 text-black hover:bg-gray-300'
                     }`}
                   >
                     {getTimeRangeLabel(range)}
@@ -102,16 +102,16 @@ export default function ArtistsPage({ isSignedIn, setIsSignedIn, onLogout, userP
 
             {loading && (
               <div className="flex justify-center items-center py-20">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black"></div>
               </div>
             )}
 
             {error && (
-              <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-4 mb-6">
-                <p className="text-white">{error}</p>
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                <p className="text-red-800">{error}</p>
                 <Button
                   onClick={fetchTopArtists}
-                  className="mt-4 bg-white text-violet-950 hover:bg-white/90"
+                  className="mt-4 bg-black text-white hover:bg-gray-800"
                 >
                   Try Again
                 </Button>
@@ -120,7 +120,7 @@ export default function ArtistsPage({ isSignedIn, setIsSignedIn, onLogout, userP
 
             {!loading && !error && topArtists.length === 0 && (
               <div className="text-center py-20">
-                <p className="text-white/70 text-lg">
+                <p className="text-gray-600 text-lg">
                   No top artists found. Start listening to music on Spotify to see your favorites here!
                 </p>
               </div>
@@ -131,7 +131,7 @@ export default function ArtistsPage({ isSignedIn, setIsSignedIn, onLogout, userP
                 {topArtists.map((artist) => (
                   <div
                     key={artist.id}
-                    className="rounded-2xl bg-white/10 backdrop-blur-sm overflow-hidden shadow-lg hover:shadow-xl transition-all border border-white/20 hover:border-white/30"
+                    className="rounded-lg bg-white overflow-hidden shadow-md hover:shadow-lg transition-all border border-gray-200"
                   >
                     <img
                       src={artist.images?.[0]?.url || artist.images?.[1]?.url || "/placeholder.svg"}
@@ -139,21 +139,56 @@ export default function ArtistsPage({ isSignedIn, setIsSignedIn, onLogout, userP
                       className="w-full h-48 object-cover"
                     />
                     <div className="p-6">
-                      <h3 className="text-xl font-semibold mb-2 text-white">
+                      <h3 className="text-xl font-semibold mb-4 text-black">
                         {artist.name}
                       </h3>
-                      {artist.external_urls?.spotify && (
+                      <div className="flex gap-3 justify-center">
                         <a
-                          // href = {} this is supposed to be the link to their ticketmaster page
+                          href={`https://www.ticketmaster.com/search?q=${encodeURIComponent(artist.name)}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="block"
+                        
                         >
-                          <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0">
-                            Find Concerts
-                          </Button>
+                          <div className="w-20 h-20 bg-white rounded-lg p-2 hover:bg-gray-100 transition-colors flex items-center justify-center shadow-md hover:shadow-lg border border-gray-200">
+                            <img
+                              src="/ticketmaster.png"
+                              alt="Ticketmaster"
+                              className="w-full h-full object-contain"
+                            />
+                          </div>
                         </a>
-                      )}
+                        <a
+                          href={`https://seatgeek.com/search?f=1&search=${encodeURIComponent(artist.name)}&ui_origin=home_search`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block"
+                       
+                        >
+                          <div className="w-20 h-20 bg-white rounded-lg p-2 hover:bg-gray-100 transition-colors flex items-center justify-center shadow-md hover:shadow-lg border border-gray-200">
+                            <img
+                              src="/seatgeek.png"
+                              alt="SeatGeek"
+                              className="w-full h-full object-contain"
+                            />
+                          </div>
+                        </a>
+                        <a
+                          href={`https://www.tickpick.com/search/?q=${encodeURIComponent(artist.name)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block"
+                        
+                        >
+                          <div className="w-20 h-20 bg-white rounded-lg p-2 hover:bg-gray-100 transition-colors flex items-center justify-center shadow-md hover:shadow-lg border border-gray-200">
+                            <img
+                              src="/tickpick.png"
+                              alt="TickPick"
+                              className="w-full h-full object-contain"
+                            />
+                          </div>
+                        </a>
+                      </div>
                     </div>
                   </div>
                 ))}
